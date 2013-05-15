@@ -18,6 +18,16 @@ require 'killbill/gen/tenant_context'
 require 'killbill/gen/custom_field'
 require 'killbill/gen/tag'
 require 'killbill/gen/tag_definition'
+require 'killbill/gen/payment_info_plugin'
+require 'killbill/gen/payment_plugin_status'
+require 'killbill/gen/refund_info_plugin'
+require 'killbill/gen/refund_plugin_status'
+require 'killbill/gen/payment_method_kv_info'
+require 'killbill/gen/payment_method_plugin'
+require 'killbill/gen/payment_method_info_plugin'
 
+#
+# STEPH TODO added by hand
+#
 require 'killbill/gen/uuid'
 require 'killbill/gen/date_time_zone'

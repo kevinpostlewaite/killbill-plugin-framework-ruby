@@ -4,10 +4,7 @@ require 'singleton'
 
 require 'killbill/creator'
 require 'killbill/plugin'
-require 'killbill/jresponse/jpayment_response'
-require 'killbill/jresponse/jrefund_response'
-require 'killbill/jresponse/jpayment_method_response'
-require 'killbill/jresponse/jpayment_method_response_internal'
+require 'killbill/jconverter'
 
 include Java
 
@@ -36,21 +33,21 @@ module Killbill
       java_signature 'com.ning.billing.payment.plugin.api.PaymentInfoPlugin processPayment(java.util.UUID, java.util.UUID, java.util.UUID, java.lang.BigDecimal, com.ning.billing.catalog.api.Currency, com.ning.billing.util.callcontext.CallContext)'
       def process_payment(*args)
         do_call_handle_exception(__method__, *args) do |res|
-          return JPaymentResponse.new(res)
+          return JConverter.to_payment_info_plugin(res)
         end
       end
 
       java_signature 'Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin getPaymentInfo(java.util.UUID, java.util.UUID, Java::com.ning.billing.util.callcontext.TenantContext)'
       def get_payment_info(*args)
         do_call_handle_exception(__method__, *args) do |res|
-          return JPaymentResponse.new(res)
+          return JConverter.to_payment_info_plugin(res)
         end
       end
 
       java_signature 'Java::com.ning.billing.payment.plugin.api.RefundInfoPlugin processRefund(java.util.UUID, java.util.UUID, java.lang.BigDecimal, com.ning.billing.catalog.api.Currency, Java::com.ning.billing.util.callcontext.CallContext)'
       def process_refund(*args)
         do_call_handle_exception(__method__, *args) do |res|
-          return JRefundResponse.new(res)
+          return JConverter.to_refund_info_plugin(res)
         end
       end
 
@@ -59,7 +56,7 @@ module Killbill
         do_call_handle_exception(__method__, *args) do |res|
           array_res = java.util.ArrayList.new
           res.each do |el|
-            array_res.add(JRefundResponse.new(el))
+            array_res.add(JConverter.to_refund_info_plugin(el))
           end
           return array_res
         end
@@ -82,7 +79,7 @@ module Killbill
       java_signature 'Java::com.ning.billing.payment.api.PaymentMethodPlugin getPaymentMethodDetail(java.util.UUID, java.util.UUID, Java::com.ning.billing.util.callcontext.TenantContext)'
       def get_payment_method_detail(*args)
         do_call_handle_exception(__method__, *args) do |res|
-          return JPaymentMethodResponse.new(res)
+          return JConverter.to_payment_method_response(res)
         end
       end
 
@@ -98,7 +95,7 @@ module Killbill
         do_call_handle_exception(__method__, *args) do |res|
           array_res = java.util.ArrayList.new
           res.each do |el|
-            array_res.add(JPaymentMethodResponseInternal.new(el))
+            array_res.add(JConverter.to_payment_method_info_plugin(el))
           end
           return array_res
         end

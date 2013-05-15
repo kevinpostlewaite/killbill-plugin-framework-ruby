@@ -26,7 +26,14 @@ INTERFACES = ["Account",
               "CustomField",
               "Tag",
               "TagDefinition",
-              "Currency"]
+              "Currency",
+              "PaymentInfoPlugin",
+              "PaymentPluginStatus",
+              "RefundInfoPlugin",
+              "RefundPluginStatus",
+              "PaymentMethodKVInfo",
+              "PaymentMethodPlugin",
+              "PaymentMethodInfoPlugin"]
 
 class String
    def snake_case
@@ -237,7 +244,7 @@ class Generator
       while (line = f.gets)
 
         # Interface
-        re = /public\s+interface\s+(\w+)\s+(extends(?:\w|,|\s|<|>)+){0,1}\s*{\s*/
+        re = /public\s+(?:interface|class)\s+(\w+)\s+(extends(?:\w|,|\s|<|>)+){0,1}\s*{\s*/
         if re.match(line)
           interface = $1
           visitor.create_interface(interface)
@@ -267,13 +274,13 @@ class Generator
         end
 
         # Non static getters for interfaces
-        re = /(?:public){0,1}\s+(?:static\s+\w+)\s+(?:get|is).*/
+        re = /(?:public){0,1}\s+(?:static\s+(?:\w|<|>)+)\s+(?:get|is).*/
         if is_interface && !re.match(line)
-          re = /(?:public){0,1}\s+(?:\w+)\s+get(\w+)()\s*/
+          re = /(?:public){0,1}\s+(?:(?:\w|<|>)+)\s+get(\w+)()\s*/
           if re.match(line)
             visitor.add_getter($1)
           end
-          re = /(?:public){0,1}\s+(?:\w+)\s+(is\w+)()\s*/
+          re = /(?:public){0,1}\s+(?:(?:\w|<|>)+)\s+(is\w+)()\s*/
           if re.match(line)
             visitor.add_getter($1)
           end
