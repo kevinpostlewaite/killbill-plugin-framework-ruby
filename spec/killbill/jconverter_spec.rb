@@ -1,10 +1,5 @@
 require 'spec_helper'
 require 'date'
-
-require 'killbill/response/event'
-
-require 'killbill/jresponse/jevent'
-
 require 'killbill/jconverter'
 
 describe Killbill::Plugin::JConverter do
@@ -163,16 +158,14 @@ describe Killbill::Plugin::JConverter do
        event_type = Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::INVOICE_CREATION
        uuid = java.util.UUID.random_uuid
 
-       input = Killbill::Plugin::JEvent.new(event_type, object_type, uuid, uuid, uuid)
+       input = Killbill::Plugin::Gen::ExtBusEvent.new(event_type, object_type, uuid, uuid, uuid)
        output = Killbill::Plugin::JConverter.from_ext_bus_event(input)
 
-       output.should be_an_instance_of Killbill::Plugin::Event
+       output.should be_an_instance_of Killbill::Plugin::Gen::ExtBusEvent
 
-       output.event_type.should be_an_instance_of String
-       output.event_type.should == 'INVOICE_CREATION'
+       output.event_type.should == Killbill::Plugin::Gen::ExtBusEventType::INVOICE_CREATION
 
-       output.object_type.should be_an_instance_of String
-       output.object_type.should == 'INVOICE'
+       output.object_type.should == Killbill::Plugin::Gen::ObjectType::INVOICE
 
        output.object_id.should be_an_instance_of Killbill::Plugin::Gen::UUID
        output.object_id.to_s.should == Killbill::Plugin::JConverter.from_uuid(uuid).to_s

@@ -5,13 +5,14 @@ require 'optparse'
 # Relative path from Killbill repo
 API_DIR_SRC="api/src/main/java"
 
-
 # Interfaces to consider
 INTERFACES = ["Account",
               "AccountData",
               "AccountEmail",
               "BlockingState",
               "ExtBusEvent",
+              "ExtBusEventType",
+              "ObjectType",
               "Subscription",
               "SubscriptionBundle",
               "Invoice",
@@ -34,6 +35,9 @@ INTERFACES = ["Account",
               "PaymentMethodKVInfo",
               "PaymentMethodPlugin",
               "PaymentMethodInfoPlugin"]
+
+#INTERFACES = ["ObjectType"]
+
 
 class String
    def snake_case
@@ -271,6 +275,7 @@ class Generator
           enum_name = $1
           visitor.create_enum(enum_name)
           is_enum = true
+          is_enum_complete = false
         end
 
         # Non static getters for interfaces
@@ -287,9 +292,12 @@ class Generator
         end
 
         # Enum fields
-        re = /\s+(\w+)(?:\((?:\w|\s)+\)){0,1}\s*(?:,|;){1}/
-        if is_enum && re.match(line)
+        re = /\s+((?:\w|_)+)(?:\((?:\w|\s|\")+\)){0,1}\s*(,|;){1}/
+        if !is_enum_complete && is_enum && re.match(line)
           visitor.add_enum_field($1.strip)
+          if $2 == ';'
+            is_enum_complete = true
+          end
         end
       end
     end

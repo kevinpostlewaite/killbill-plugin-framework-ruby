@@ -314,8 +314,88 @@ module Killbill
         end
 
 
-        def from_ext_bus_event(ext_bus)
-          JEvent.to_event(ext_bus)
+        def from_ext_bus_event(event)
+          Killbill::Plugin::Gen::ExtBusEvent.new(from_bus_event_type(event.event_type),
+                          from_object_type(event.object_type),
+                          from_uuid(event.object_id),
+                          from_uuid(event.account_id),
+                          from_uuid(event.tenant_id))
+        end
+                
+        def from_object_type(type)
+          if type ==  Java::com.ning.billing.ObjectType::ACCOUNT
+            Killbill::Plugin::Gen::ObjectType::ACCOUNT
+          elsif type ==  Java::com.ning.billing.ObjectType::ACCOUNT_EMAIL
+              Killbill::Plugin::Gen::ObjectType::ACCOUNT_EMAIL
+          elsif  type ==  Java::com.ning.billing.ObjectType::BLOCKING_STATES
+              Killbill::Plugin::Gen::ObjectType::BLOCKING_STATES
+          elsif type ==  Java::com.ning.billing.ObjectType::BUNDLE
+              Killbill::Plugin::Gen::ObjectType::BUNDLE
+          elsif  type ==  Java::com.ning.billing.ObjectType::CUSTOM_FIELD
+              Killbill::Plugin::Gen::ObjectType::CUSTOM_FIELD
+          elsif type ==  Java::com.ning.billing.ObjectType::INVOICE
+              Killbill::Plugin::Gen::ObjectType::INVOICE
+          elsif  type ==  Java::com.ning.billing.ObjectType::PAYMENT
+              Killbill::Plugin::Gen::ObjectType::PAYMENT
+          elsif type ==  Java::com.ning.billing.ObjectType::INVOICE_ITEM
+              Killbill::Plugin::Gen::ObjectType::INVOICE_ITEM
+          elsif  type ==  Java::com.ning.billing.ObjectType::INVOICE_PAYMENT
+              Killbill::Plugin::Gen::ObjectType::INVOICE_PAYMENT
+          elsif type ==  Java::com.ning.billing.ObjectType::SUBSCRIPTION
+              Killbill::Plugin::Gen::ObjectType::SUBSCRIPTION
+          elsif  type ==  Java::com.ning.billing.ObjectType::SUBSCRIPTION_EVENT
+              Killbill::Plugin::Gen::ObjectType::SUBSCRIPTION_EVENT
+          elsif type ==  Java::com.ning.billing.ObjectType::PAYMENT_ATTEMPT
+              Killbill::Plugin::Gen::ObjectType::PAYMENT_ATTEMPT
+          elsif  type ==  Java::com.ning.billing.ObjectType::PAYMENT_METHOD
+              Killbill::Plugin::Gen::ObjectType::PAYMENT_METHOD
+          elsif type ==  Java::com.ning.billing.ObjectType::REFUND
+              Killbill::Plugin::Gen::ObjectType::REFUND
+          elsif type ==  Java::com.ning.billing.ObjectType::TAG
+            Killbill::Plugin::Gen::ObjectType::TAG
+          elsif type ==  Java::com.ning.billing.ObjectType::TAG_DEFINITION
+              Killbill::Plugin::Gen::ObjectType::TAG_DEFINITION
+          elsif  type ==  Java::com.ning.billing.ObjectType::TENANT
+              Killbill::Plugin::Gen::ObjectType::TENANT
+          else
+              Killbill::Plugin::Gen::ObjectType::TENANT_KVS
+          end          
+        end
+        
+        def from_bus_event_type(type)
+          if type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::ACCOUNT_CREATION
+            Killbill::Plugin::Gen::ExtBusEventType::ACCOUNT_CREATION
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::ACCOUNT_CHANGE
+              Killbill::Plugin::Gen::ExtBusEventType::ACCOUNT_CHANGE
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::SUBSCRIPTION_CREATION
+              Killbill::Plugin::Gen::ExtBusEventType::SUBSCRIPTION_CREATION
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::SUBSCRIPTION_PHASE
+              Killbill::Plugin::Gen::ExtBusEventType::SUBSCRIPTION_PHASE
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::SUBSCRIPTION_CHANGE
+              Killbill::Plugin::Gen::ExtBusEventType::SUBSCRIPTION_CHANGE
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::SUBSCRIPTION_CANCEL
+              Killbill::Plugin::Gen::ExtBusEventType::SUBSCRIPTION_CANCEL
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::SUBSCRIPTION_UNCANCEL
+              Killbill::Plugin::Gen::ExtBusEventType::SUBSCRIPTION_UNCANCEL
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::OVERDUE_CHANGE
+              Killbill::Plugin::Gen::ExtBusEventType::OVERDUE_CHANGE
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::INVOICE_CREATION
+              Killbill::Plugin::Gen::ExtBusEventType::INVOICE_CREATION
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::INVOICE_ADJUSTMENT
+              Killbill::Plugin::Gen::ExtBusEventType::INVOICE_ADJUSTMENT
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::PAYMENT_SUCCESS
+              Killbill::Plugin::Gen::ExtBusEventType::PAYMENT_SUCCESS
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::PAYMENT_FAILED
+              Killbill::Plugin::Gen::ExtBusEventType::PAYMENT_FAILED
+          elsif  type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::TAG_CREATION
+              Killbill::Plugin::Gen::ExtBusEventType::TAG_CREATION
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::TAG_DELETION
+              Killbill::Plugin::Gen::ExtBusEventType::TAG_DELETION
+          elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::CUSTOM_FIELD_CREATION
+              Killbill::Plugin::Gen::ExtBusEventType::CUSTOM_FIELD_CREATION
+          else
+              Killbill::Plugin::Gen::ExtBusEventType::CUSTOM_FIELD_DELETION  
+          end
         end
 
       end
