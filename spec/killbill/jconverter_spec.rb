@@ -1,15 +1,8 @@
 require 'spec_helper'
 require 'date'
 
-require 'killbill/response/payment_method_response'
-require 'killbill/response/payment_method_response_internal'
-require 'killbill/response/payment_status'
-require 'killbill/response/payment_response'
-require 'killbill/response/refund_response'
 require 'killbill/response/event'
 
-require 'killbill/jresponse/jpayment_method_response'
-require 'killbill/jresponse/jpayment_method_response_internal'
 require 'killbill/jresponse/jevent'
 
 require 'killbill/jconverter'
@@ -47,24 +40,24 @@ describe Killbill::Plugin::JConverter do
     end
 
     it "should_test_payment_plugin_status_success_converter" do
-      input = Killbill::Plugin::PaymentStatus::SUCCESS
+      input = Killbill::Plugin::Gen::PaymentPluginStatus::PROCESSED
       output = Killbill::Plugin::JConverter.to_payment_plugin_status(input)
-      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus
-      output.should == Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus::PROCESSED
+      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus
+      output.should == Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus::PROCESSED
     end
 
     it "should_test_payment_plugin_status_failed_converter" do
-      input = Killbill::Plugin::PaymentStatus::ERROR
+      input = Killbill::Plugin::Gen::PaymentPluginStatus::ERROR
       output = Killbill::Plugin::JConverter.to_payment_plugin_status(input)
-      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus
-      output.should == Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus::ERROR
+      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus
+      output.should == Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus::ERROR
     end
 
     it "should_test_payment_plugin_status_undefined_converter" do
-      input = Killbill::Plugin::PaymentStatus::UNDEFINED
+      input = Killbill::Plugin::Gen::PaymentPluginStatus::UNDEFINED
       output = Killbill::Plugin::JConverter.to_payment_plugin_status(input)
-      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus
-      output.should == Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus::UNDEFINED
+      output.should be_an_instance_of Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus
+      output.should == Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus::UNDEFINED
     end
 
     it "should_test_big_decimal_converter" do
@@ -152,9 +145,9 @@ describe Killbill::Plugin::JConverter do
     end
 
     it "should_test_payment_status_from_converter" do
-      input = Java::com.ning.billing.payment.plugin.api.PaymentInfoPlugin::PaymentPluginStatus::PROCESSED
+      input = Java::com.ning.billing.payment.plugin.api.PaymentPluginStatus::PROCESSED
       output = Killbill::Plugin::JConverter.from_payment_plugin_status(input)
-      output.should == Killbill::Plugin::PaymentStatus::SUCCESS
+      output.should == Killbill::Plugin::Gen::PaymentPluginStatus::PROCESSED
     end
 
     it "should_test_big_decimal_from_converter" do
@@ -163,57 +156,6 @@ describe Killbill::Plugin::JConverter do
       output.should be_an_instance_of Fixnum
       output.to_s.should == "1000"
     end
-
-    it "should_test_payment_method_plugin_from_converter" do
-      prop = Killbill::Plugin::PaymentMethodProperty.new("key", "value", true)
-      payment_method_response = Killbill::Plugin::PaymentMethodResponse.new("external_payment_method_id", true, [prop])
-      input = Killbill::Plugin::JPaymentMethodResponse.new(payment_method_response)
-      output = Killbill::Plugin::JConverter.from_payment_method_plugin(input)
-
-      output.should be_an_instance_of Killbill::Plugin::PaymentMethodResponse
-
-      output.external_payment_method_id.should be_an_instance_of String
-      output.external_payment_method_id.should == payment_method_response.external_payment_method_id
-
-      output.is_default.should be_an_instance_of TrueClass
-      output.is_default.should == payment_method_response.is_default
-
-      output.properties.should be_an_instance_of Array
-      output.properties.size.should == 1
-
-      output_prop = output.properties[0]
-      output_prop.should be_an_instance_of Killbill::Plugin::PaymentMethodProperty
-
-      output_prop.key.should be_an_instance_of String
-      output_prop.key.should == prop.key
-
-      output_prop.value.should be_an_instance_of String
-      output_prop.value.should == prop.value
-
-      output_prop.is_updatable.should be_an_instance_of TrueClass
-      output_prop.is_updatable.should == prop.is_updatable
-    end
-
-    it "should_test_payment_method_info_plugin__from_converter" do
-
-      payment_method_info = Killbill::Plugin::PaymentMethodResponseInternal.new("bf5c926e-3d9c-470e-b34b-0719d7b58323", "ca5c926e-3d9c-470e-b34b-0719d7b58312", false, "external_payment_method_id")
-      input = Killbill::Plugin::JPaymentMethodResponseInternal.new(payment_method_info)
-      output = Killbill::Plugin::JConverter.from_payment_method_info_plugin(input)
-
-      output.should be_an_instance_of Killbill::Plugin::PaymentMethodResponseInternal
-
-      output.kb_account_id.should be_an_instance_of Killbill::Plugin::Gen::UUID
-      output.kb_account_id.to_s.should == payment_method_info.kb_account_id.to_s
-
-      output.kb_payment_method_id.should be_an_instance_of Killbill::Plugin::Gen::UUID
-      output.kb_payment_method_id.to_s.should == payment_method_info.kb_payment_method_id.to_s
-
-      output.is_default.should be_an_instance_of FalseClass
-      output.is_default.should == payment_method_info.is_default
-
-      output.external_payment_method_id.should be_an_instance_of String
-      output.external_payment_method_id.should == payment_method_info.external_payment_method_id
-     end
 
      it "should_test_ext_bus_event__from_converter" do
 
