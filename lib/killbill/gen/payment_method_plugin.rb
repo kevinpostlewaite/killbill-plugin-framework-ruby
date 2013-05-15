@@ -8,7 +8,7 @@ module Killbill
 
       class PaymentMethodPlugin
 
-        attr_reader :external_payment_method_id, :is_default_payment_method, :properties, :value_string, :type, :cc_name, :cc_type, :cc_expiration_month, :cc_expiration_year, :cc_last4, :address1, :address2, :city, :state, :zip, :countr
+        attr_reader :external_payment_method_id, :is_default_payment_method, :properties, :value_string, :type, :cc_name, :cc_type, :cc_expiration_month, :cc_expiration_year, :cc_last4, :address1, :address2, :city, :state, :zip, :country
 
         def initialize(external_payment_method_id, is_default_payment_method, properties, value_string, type, cc_name, cc_type, cc_expiration_month, cc_expiration_year, cc_last4, address1, address2, city, state, zip, country)
           @external_payment_method_id = external_payment_method_id
