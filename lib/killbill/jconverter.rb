@@ -165,7 +165,8 @@ module Killbill
 
         def from_account(data)
           Killbill::Plugin::Gen::Account.new(from_uuid(data.id),
-                                            from_blocking_state(data.blocking_state),
+                                            nil,
+                                            #from_blocking_state(data.blocking_state),
                                             from_joda_date_time(data.created_date),
                                             from_joda_date_time(data.updated_date),
                                             from_string(data.external_key),
@@ -193,7 +194,6 @@ module Killbill
           if data.nil?
             return nil
           end
-
         end
 
         def from_currency(currency)
@@ -321,7 +321,7 @@ module Killbill
                           from_uuid(event.account_id),
                           from_uuid(event.tenant_id))
         end
-                
+
         def from_object_type(type)
           if type ==  Java::com.ning.billing.ObjectType::ACCOUNT
             Killbill::Plugin::Gen::ObjectType::ACCOUNT
@@ -359,9 +359,9 @@ module Killbill
               Killbill::Plugin::Gen::ObjectType::TENANT
           else
               Killbill::Plugin::Gen::ObjectType::TENANT_KVS
-          end          
+          end
         end
-        
+
         def from_bus_event_type(type)
           if type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::ACCOUNT_CREATION
             Killbill::Plugin::Gen::ExtBusEventType::ACCOUNT_CREATION
@@ -394,7 +394,7 @@ module Killbill
           elsif type ==  Java::com.ning.billing.beatrix.bus.api.ExtBusEventType::CUSTOM_FIELD_CREATION
               Killbill::Plugin::Gen::ExtBusEventType::CUSTOM_FIELD_CREATION
           else
-              Killbill::Plugin::Gen::ExtBusEventType::CUSTOM_FIELD_DELETION  
+              Killbill::Plugin::Gen::ExtBusEventType::CUSTOM_FIELD_DELETION
           end
         end
 
