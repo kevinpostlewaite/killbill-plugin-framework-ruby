@@ -27,10 +27,10 @@ module Killbill
   module Plugin
     module Model
 
-      java_package 'com.ning.billing.beatrix.bus.api'
+      java_package 'com.ning.billing.notification.plugin.api'
       class ExtBusEvent
 
-        include com.ning.billing.beatrix.bus.api.ExtBusEvent
+        include com.ning.billing.notification.plugin.api.ExtBusEvent
 
         attr_accessor :event_type, :object_type, :object_id, :account_id, :tenant_id
 
@@ -38,8 +38,8 @@ module Killbill
         end
 
         def to_java()
-          # conversion for event_type [type = com.ning.billing.beatrix.bus.api.ExtBusEventType]
-          @event_type = Java::com.ning.billing.beatrix.bus.api.ExtBusEventType.value_of("#{@event_type.to_s}") unless @event_type.nil?
+          # conversion for event_type [type = com.ning.billing.notification.plugin.api.ExtBusEventType]
+          @event_type = Java::com.ning.billing.notification.plugin.api.ExtBusEventType.value_of("#{@event_type.to_s}") unless @event_type.nil?
 
           # conversion for object_type [type = com.ning.billing.ObjectType]
           @object_type = Java::com.ning.billing.ObjectType.value_of("#{@object_type.to_s}") unless @object_type.nil?
@@ -56,7 +56,7 @@ module Killbill
         end
 
         def to_ruby(j_obj)
-          # conversion for event_type [type = com.ning.billing.beatrix.bus.api.ExtBusEventType]
+          # conversion for event_type [type = com.ning.billing.notification.plugin.api.ExtBusEventType]
           @event_type = j_obj.event_type
           @event_type = @event_type.to_s.to_sym unless @event_type.nil?
 

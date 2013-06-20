@@ -53,22 +53,6 @@ module Killbill
           end
         end
 
-        java_signature 'Java::com.ning.billing.account.api.Account migrateAccount(Java::com.ning.billing.account.api.MigrationAccountData, Java::com.ning.billing.util.callcontext.CallContext)'
-        def migrate_account(data, context)
-          # conversion for data [type = com.ning.billing.account.api.MigrationAccountData]
-          data = data.to_java unless data.nil?
-          # conversion for context [type = com.ning.billing.util.callcontext.CallContext]
-          context = context.to_java unless context.nil?
-          begin
-            res = @real_java_api.migrate_account(data, context)
-            # conversion for res [type = com.ning.billing.account.api.Account]
-            res = Killbill::Plugin::Model::Account.new.to_ruby(res) unless res.nil?
-            return res
-          rescue Java::com.ning.billing.account.api.AccountApiException => e
-            raise Killbill::Plugin::Model::AccountApiException.new.to_ruby(e)
-          end
-        end
-
         java_signature 'Java::void updateAccount(Java::com.ning.billing.account.api.Account, Java::com.ning.billing.util.callcontext.CallContext)'
         def update_account(account, context)
           # conversion for account [type = com.ning.billing.account.api.Account]
